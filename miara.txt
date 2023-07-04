@@ -1,19 +1,74 @@
 import java.io.*;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class KonwerterJednostekMiary {
+public class KonwerterJednostekMiary extends Application {
     private static final String NAZWA_PLIKU = "konwersje.txt";
 
-    public static void zapiszDoPliku(List<String> konwersje) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(NAZWA_PLIKU, true))) {
-            for (String konwersja : konwersje) {
-                writer.println(konwersja);
-            }
-        } catch (IOException e) {
-            System.out.println("Blad podczas zapisywania do pliku.");
+    private TextArea outputTextArea;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Konwerter Jednostek Miary");
+
+        Button konwertujButton = new Button("Konwertuj jednostki");
+        Button wyszukajButton = new Button("Wyszukaj konwersje");
+        Button odczytajButton = new Button("Odczytaj zapisane konwersje");
+
+        Label wartoscLabel = new Label("Podaj wartosc w metrach:");
+        TextField wartoscTextField = new TextField();
+
+        Label rodzajMiaryLabel = new Label("Podaj rodzaj miary (np. cm, mm, km, ft, in):");
+        TextField rodzajMiaryTextField = new TextField();
+
+        outputTextArea = new TextArea();
+        outputTextArea.setEditable(false);
+        outputTextArea.setPrefHeight(200);
+
+        konwertujButton.setOnAction(e -> {
+            double wartosc = Double.parseDouble(wartoscTextField.getText());
+            List<String> konwersje = konwertujJednostki(wartosc);
+            updateOutputText(konwersje);
+        });
+
+        wyszukajButton.setOnAction(e -> {
+            String rodzajMiary = rodzajMiaryTextField.getText();
+            wyszukajKonwersje(rodzajMiary);
+        });
+
+        odczytajButton.setOnAction(e -> odczytajZPliku());
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.getChildren().addAll(
+                wartoscLabel, wartoscTextField,
+                konwertujButton,
+                rodzajMiaryLabel, rodzajMiaryTextField,
+                wyszukajButton,
+                odczytajButton,
+                outputTextArea
+        );
+        Scene scene = new Scene(layout, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void updateOutputText(List<String> lines) {
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines) {
+            sb.append(line).append("\n");
         }
+        outputTextArea.setText(sb.toString());
     }
 
     public static void odczytajZPliku() {
