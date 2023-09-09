@@ -1,15 +1,11 @@
+package org.example;
+
 import java.io.*;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class KonwerterJednostekMiary extends Application {
+public class Java extends {
     private static final String NAZWA_PLIKU = "konwersje.txt";
 
     private TextArea outputTextArea;
@@ -34,7 +30,6 @@ public class KonwerterJednostekMiary extends Application {
 
         outputTextArea = new TextArea();
         outputTextArea.setEditable(false);
-        outputTextArea.setPrefHeight(200);
 
         konwertujButton.setOnAction(e -> {
             double wartosc = Double.parseDouble(wartoscTextField.getText());
